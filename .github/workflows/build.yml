@@ -16,6 +16,6 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}  # Checkout PR code
           fetch-depth: 0 #to pull history
       - name: SonarCloud Scan
-        uses: SonarSource/sonarqube-scan-action@v6
+        uses: SonarSource/sonarqube-scan-action@fd88b7d7f7690623a9d70104868f121114b09c69 #v6.0.0
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
