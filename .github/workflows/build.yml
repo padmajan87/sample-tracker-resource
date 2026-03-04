@@ -19,7 +19,7 @@ jobs:
           fetch-depth: 0
       - name: SonarCloud Scan
         if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
-        uses: SonarSource/sonarcloud-github-action@master
+        uses: SonarSource/sonarqube-scan-action@v3
         with:
           projectBaseDir: .
         env:
