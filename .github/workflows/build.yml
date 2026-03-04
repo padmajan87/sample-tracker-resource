@@ -6,6 +6,9 @@ on:
     types: [ opened, synchronize, reopened ]
     branches:
       - main
+  push:
+    branches:
+      - main
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -13,29 +16,29 @@ jobs:
       - name: Check out release
         uses: actions/checkout@v2
         with:
-          ref: ${{ github.event.pull_request.head.sha }}  # Checkout PR code
-          fetch-depth: 0 #to pull history
+          fetch-depth: 0
       - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@fd88b7d7ccbaefd23d8f36f73b59db7a3d246602
+        if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
+        uses: SonarSource/sonarqube-scan-action@fd88b7d7ccbaefd23d8f36f73b59db7a3d246602
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v1
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Set up Docker Buildx
+        if: github.event_name == 'release'
         uses: docker/setup-buildx-action@v1
-      - name: Login to IBM Cloud Container Registry
-        uses: docker/login-action@v1 
+      - name: Login to Docker
+        if: github.event_name == 'release'
+        uses: docker/login-action@v1
         with:
-          registry: icr.io
-          username: ${{ secrets.ICR_USERNAME }}
-          password: ${{ secrets.ICR_TOKEN }}
+            registry: icr.io
+            username: ${{ secrets.DOCKER_USERNAME }}
+            password: ${{ secrets.DOCKER_TOKEN }}
       - name: Build and push
+        if: github.event_name == 'release'
         id: docker_build
         uses: docker/build-push-action@v2
         with:
-          build-args: |
-            version=${{ github.event.release.tag_name }}
-          push: true
-          tags: icr.io/instana/pipeline-feedback-resource
-      - name: Image digest
-        run: echo ${{ steps.docker_build.outputs.digest }}
+            build-args: |
+              version=${{ github.event.release.tag_name }}
+            push: true
+            tags: test_sample_tracker
