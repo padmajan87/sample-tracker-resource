@@ -6,17 +6,26 @@ on:
     types: [ opened, synchronize, reopened ]
     branches:
       - main
+  push:
+    branches:
+      - main
 jobs:
+  sonar_scan:
+    name: Code Quality Scan
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarqube-scan-action@v3
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Check out release
         uses: actions/checkout@v2
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}  # Checkout PR code
-          fetch-depth: 0 #to pull history
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarqube-scan-action@fd88b7d7ccbaefd23d8f36f73b59db7a3d246602 #v6.0.0
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
