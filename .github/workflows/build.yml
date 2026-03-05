@@ -48,3 +48,4 @@ jobs:
               version=${{ github.event.release.tag_name }}
             push: true
             tags: test_sample_tracker
+            #test without secrets
