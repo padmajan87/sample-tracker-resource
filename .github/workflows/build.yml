@@ -47,9 +47,8 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          args: >
+          args: |
             -Dsonar.shellcheck.reportPath=shellcheck-report.json
-            -Dsonar.externalIssuesReportPaths=shellcheck-report.json
             -Dsonar.verbose=true
       - name: Set up Docker Buildx
         if: github.event_name == 'release'
