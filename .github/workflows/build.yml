@@ -23,12 +23,8 @@ jobs:
         if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
         run: |
             sudo apt-get install -y shellcheck
-            # Scan all .sh files and output to a JSON file
-            FILES=$(grep -lZE '^#!(.*/|/usr/bin/env +)(bm?sh|bash|sh|zsh)' -r . --exclude-dir=.git)
-            echo "--- Files identified for ShellCheck ---"
-            echo "$FILES"
-            echo "---------------------------------------"
-            echo "$FILES" | xargs shellcheck -f json > shellcheck-report.json || true
+            grep -lZE '^#!(.*/|/usr/bin/env +)(bm?sh|bash|sh|zsh)' -r . --exclude-dir=.git \
+                  | xargs -0 -r shellcheck -f json > shellcheck-report.jso
       - name: SonarCloud Scan
         if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
         uses: SonarSource/sonarqube-scan-action@fd88b7d7ccbaefd23d8f36f73b59db7a3d246602
