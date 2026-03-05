@@ -48,7 +48,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           args: >
-            -Dsonar.shellcheck.reportPath=shellcheck-report.json
+            -Dsonar.shellcheck.reportPath=./shellcheck-report.json
+            -Dsonar.verbose=true
       - name: Set up Docker Buildx
         if: github.event_name == 'release'
         uses: docker/setup-buildx-action@v1
