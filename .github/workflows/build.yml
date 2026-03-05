@@ -29,6 +29,8 @@ jobs:
              echo "--- Report File Info ---"
              ls -lh shellcheck-report.json || echo "Report file NOT found!"
           
+             sed -i 's|"file":"./|"file":"|g' shellcheck-report.json
+          
               echo "--- Files with detected issues ---"
               if [ -s shellcheck-report.json ]; then
                   grep -oP '"file":"\K[^"]+' shellcheck-report.json | sort -u || echo "No issues found in scripts."
