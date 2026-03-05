@@ -25,6 +25,16 @@ jobs:
             sudo apt-get install -y shellcheck
             (grep -lZE '^#!(.*/|/usr/bin/env +)(bm?sh|bash|sh|zsh)' -r . --exclude-dir=.git \
                   | xargs -0 -r shellcheck -f json > shellcheck-report.json) || true
+             
+             echo "--- Report File Info ---"
+             ls -lh shellcheck-report.json || echo "Report file NOT found!"
+          
+              echo "--- Files with detected issues ---"
+              if [ -s shellcheck-report.json ]; then
+                  grep -oP '"file":"\K[^"]+' shellcheck-report.json | sort -u || echo "No issues found in scripts."
+              else
+                  echo "Report is empty (no issues found)."
+              fi
       - name: SonarCloud Scan
         if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
         uses: SonarSource/sonarqube-scan-action@fd88b7d7ccbaefd23d8f36f73b59db7a3d246602
