@@ -24,7 +24,6 @@ jobs:
         run: |
             sudo apt-get install -y shellcheck
             # Scan all .sh files and output to a JSON file
-           shellcheck -f json > shellcheck-report.json || true
             FILES=$(grep -lZE '^#!(.*/|/usr/bin/env +)(bm?sh|bash|sh|zsh)' -r . --exclude-dir=.git)
             echo "--- Files identified for ShellCheck ---"
             echo "$FILES"
