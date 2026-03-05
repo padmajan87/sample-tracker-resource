@@ -19,12 +19,21 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+      - name: Run ShellCheck
+        if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
+        run: |
+            sudo apt-get install -y shellcheck
+            # Scan all .sh files and output to a JSON file
+            shellcheck -f json *.sh > shellcheck-report.json || true
       - name: SonarCloud Scan
         if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
         uses: SonarSource/sonarqube-scan-action@fd88b7d7ccbaefd23d8f36f73b59db7a3d246602
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          args: >
+            -Dsonar.shellcheck.reportPath=shellcheck-report.json
       - name: Set up Docker Buildx
         if: github.event_name == 'release'
         uses: docker/setup-buildx-action@v1
