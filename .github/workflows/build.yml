@@ -37,6 +37,9 @@ jobs:
               else
                   echo "Report is empty (no issues found)."
               fi
+              echo "Current Directory: $(pwd)"
+              echo "Check if file exists:"
+              ls -l shellcheck-report.json
       - name: SonarCloud Scan
         if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
         uses: SonarSource/sonarqube-scan-action@fd88b7d7ccbaefd23d8f36f73b59db7a3d246602
