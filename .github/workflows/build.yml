@@ -47,6 +47,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
+          projectBaseDir: .
           args: |
             -Dsonar.shellcheck.reportPath=shellcheck-report.json
             -Dsonar.verbose=true
