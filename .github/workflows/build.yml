@@ -1,4 +1,7 @@
 name: Build and publish image to IBM Cloud Container Registry
+run-name: >
+  ${{ github.event_name == 'pull_request' && format('PR #{0} - {1}', github.event.pull_request.number, github.event.pull_request.title) || format('Push: {0}', github.ref_name) }} 
+  (@${{ github.actor }})
 on:
   release:
     types: [published]
