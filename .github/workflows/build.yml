@@ -24,7 +24,7 @@ jobs:
         run: |
             sudo apt-get install -y shellcheck
             # Scan all .sh files and output to a JSON file
-            grep -lZE '^#!(.*/|/usr/bin/env +)(bm?sh|bash|sh|zsh)' -r . \
+            grep -lZE '^#!(.*/|/usr/bin/env +)(bm?sh|bash|sh|zsh)' -r . --exclude-dir=.git \
                   | xargs -0 shellcheck -f json > shellcheck-report.json || true
       - name: SonarCloud Scan
         if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref == 'refs/heads/main')
